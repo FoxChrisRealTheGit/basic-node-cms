@@ -39,7 +39,7 @@ app.use(session({
     secret: "keybaord cat",
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: true }
+    // cookie: { secure: true }
 }));
 
 // Express Validator Middleware
