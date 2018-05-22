@@ -107,8 +107,8 @@ router.post("/reorder-pages", function (req, res) {
 /*
 * GET edit page
 */
-router.get("/edit-page/:slug", function (req, res) {
-    Page.findOne({ slug: req.params.slug }, function (err, page) {
+router.get("/edit-page/:id", function (req, res) {
+    Page.findById(req.params.id, function (err, page) {
         if (err) {
             return console.log(err)
         } else {
@@ -125,7 +125,7 @@ router.get("/edit-page/:slug", function (req, res) {
 /*
 * POST edit page
 */
-router.post("/edit-page/:slug", function (req, res) {
+router.post("/edit-page/:id", function (req, res) {
 
     req.checkBody("title", "Title must have a value.").notEmpty();
     req.checkBody("content", "Content must have a value.").notEmpty();
@@ -136,12 +136,12 @@ router.post("/edit-page/:slug", function (req, res) {
         slug = title.replace(/\s+/g, "-").toLowerCase();
     }
     let content = req.body.content;
-    let id = req.body.id;
+    let id = req.params.id;
 
     let errors = req.validationErrors();
 
     if (errors) {
-        return res.render("admin/add_page", {
+        return res.render("admin/edit_page", {
             errors: errors,
             title: title,
             slug: slug,
@@ -179,6 +179,20 @@ router.post("/edit-page/:slug", function (req, res) {
             }
         })
     }
+})
+
+/*
+* GET delete page
+*/
+router.get("/delete-page/:id", function (req, res) {
+    Page.findByIdAndRemove(req.params.id, function (err) {
+        if (err) {
+            return console.log(err)
+        } else {
+            req.flash("success", "Page deleted!")
+            res.redirect("/admin/pages/")
+        }
+    })
 })
 
 //Exports

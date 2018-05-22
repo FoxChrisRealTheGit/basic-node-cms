@@ -63,7 +63,7 @@ app.use(expressValidator({
 
 // Express Messages middleware;
 app.use(require("connect-flash")());
-app.use(function (req, res, next){
+app.use(function (req, res, next) {
     res.locals.messages = require("express-messages")(req, res);
     next();
 });
@@ -71,8 +71,10 @@ app.use(function (req, res, next){
 // Set routes
 const pages = require("./routes/pages")
 const adminPages = require("./routes/admin_pages")
+const adminCategories = require("./routes/admin_categories")
 
 app.use("/admin/pages", adminPages)
+app.use("/admin/categories", adminCategories)
 app.use("/", pages)
 
 //start the server
