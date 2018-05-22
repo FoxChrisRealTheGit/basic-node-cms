@@ -33,9 +33,9 @@
                         </td>
                         <td>
                             <% if (product.image == "") { %>
-                                <img src="/images/noimage.png" alt="">
+                                <img id="noimage" src="/images/noimage.png" alt="">
                                 <% } else { %>
-                                    <img src="/images/product_images/<%= product.id%>/<%= product.image %>" alt="">
+                                    <img id="noimage" src="/images/product_images/<%= product.id%>/<%= product.image %>" alt="">
                                     <% } %>
                         </td>
                         <td>
