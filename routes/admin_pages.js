@@ -71,6 +71,14 @@ router.post("/add-page", function (req, res) {
                 page.save(function (err) {
                     if (err) { return console.log(err) };
 
+                    Page.find({}).sort({ sorting: 1 }).exec(function (err, pages) {
+                        if (err) {
+                            console.log(err);
+                        } else {
+                            req.app.locals.pages = pages;
+                        }
+                    })
+
                     req.flash("success", "Page added!");
                     res.redirect("/admin/pages");
                 })
@@ -79,11 +87,8 @@ router.post("/add-page", function (req, res) {
     }
 })
 
-/* 
-* POST reorder pages
-*/
-router.post("/reorder-pages", function (req, res) {
-    let ids = req.body["id[]"]
+// Sort pages function
+function sortPages(ids, cb) {
     let count = 0;
 
     for (let i = 0; i < ids.length; i++) {
@@ -97,10 +102,33 @@ router.post("/reorder-pages", function (req, res) {
                     if (err) {
                         return console.log(err)
                     }
+
+                    ++count;
+                    if (count >= ids.length) {
+                        cb()
+
+                    }
                 });
             });
         })(count);
     }
+}
+
+/* 
+* POST reorder pages
+*/
+router.post("/reorder-pages", function (req, res) {
+    let ids = req.body["id[]"]
+
+    sortPages(ids, function () {
+        Page.find({}).sort({ sorting: 1 }).exec(function (err, pages) {
+            if (err) {
+                console.log(err);
+            } else {
+                req.app.locals.pages = pages;
+            }
+        })
+    })
 })
 
 
@@ -170,6 +198,14 @@ router.post("/edit-page/:id", function (req, res) {
                         page.save(function (err) {
                             if (err) { return console.log(err) };
 
+                            Page.find({}).sort({ sorting: 1 }).exec(function (err, pages) {
+                                if (err) {
+                                    console.log(err);
+                                } else {
+                                    req.app.locals.pages = pages;
+                                }
+                            })
+
                             req.flash("success", "Page added!");
                             res.redirect("/admin/pages");
                         })
@@ -189,6 +225,15 @@ router.get("/delete-page/:id", function (req, res) {
         if (err) {
             return console.log(err)
         } else {
+
+            Page.find({}).sort({ sorting: 1 }).exec(function (err, pages) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    req.app.locals.pages = pages;
+                }
+            })
+
             req.flash("success", "Page deleted!")
             res.redirect("/admin/pages/")
         }

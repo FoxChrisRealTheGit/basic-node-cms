@@ -30,6 +30,30 @@ app.use(express.static(path.join(__dirname, "public")))
 // Set global errors variable
 app.locals.errors = null;
 
+// Get page model
+let Page = require("./models/page");
+
+// Get all pages to pass to header.ejs
+Page.find({}).sort({ sorting: 1 }).exec(function (err, pages) {
+    if (err) {
+        console.log(err)
+    } else {
+        app.locals.pages = pages;
+    }
+})
+
+// Get category model
+let Category = require("./models/category");
+
+// Get all categories to pass to header.ejs
+Category.find(function (err, categories) {
+    if (err) {
+        console.log(err)
+    } else {
+        app.locals.categories = categories;
+    }
+})
+
 // Express fileUpload middleware
 app.use(fileUpload());
 
@@ -79,8 +103,9 @@ app.use(expressValidator({
                 default:
                     return false
             }
-        }}
-    }));
+        }
+    }
+}));
 
 // Express Messages middleware;
 app.use(require("connect-flash")());
@@ -89,8 +114,15 @@ app.use(function (req, res, next) {
     next();
 });
 
+app.get("*", function(req, res, next){
+    res.locals.cart = req.session.cart;
+    next();
+})
+
 // Set routes
 const pages = require("./routes/pages")
+const products = require("./routes/products")
+const cart = require("./routes/cart")
 const adminPages = require("./routes/admin_pages")
 const adminCategories = require("./routes/admin_categories")
 const adminProducts = require("./routes/admin_products")
@@ -98,6 +130,8 @@ const adminProducts = require("./routes/admin_products")
 app.use("/admin/pages", adminPages)
 app.use("/admin/categories", adminCategories)
 app.use("/admin/products", adminProducts)
+app.use("/products", products)
+app.use("/cart", cart)
 app.use("/", pages)
 
 //start the server
