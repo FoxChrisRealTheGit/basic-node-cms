@@ -52,7 +52,7 @@ router.get("/:category", function (req, res) {
 router.get("/:category/:product", function (req, res) {
 
     let galleryImages = null;
-
+ let loggedIn = (req.isAuthenticated()) ? true: false
     Product.findOne({ slug: req.params.product }, function (err, product) {
         if (err) {
             console.log(err)
@@ -68,7 +68,8 @@ router.get("/:category/:product", function (req, res) {
                     res.render("product", {
                         title: product.title,
                         product: product,
-                        galleryImages: galleryImages
+                        galleryImages: galleryImages,
+                        loggedIn: loggedIn
                     })
                 }
 

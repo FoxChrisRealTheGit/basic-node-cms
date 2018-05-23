@@ -16,9 +16,13 @@
             <p>
                 <%= parseFloat(product.price).toFixed(2) %>
             </p>
-            <p>
-                <a href="/cart/add/<%= product.slug %>">Add to cart</a>
-            </p>
+            <% if (loggedIn) { %>
+                <p>
+                    <a href="/cart/add/<%= product.slug %>">Add to cart</a>
+                </p>
+                <% } else { %>
+                    <p>You must be logged in to purchase items.</p>
+                    <% } %>
         </div>
         <div class="col-xs-12">
             <ul class="gallery">
@@ -29,8 +33,8 @@
                                 <img src="/product_images/<%= product.id %>/thumbs/<%= image %>" alt="">
                             </a>
                         </li>
-                    <% } %>
-                <% }) %>
+                        <% } %>
+                            <% }) %>
             </ul>
         </div>
 

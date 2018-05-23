@@ -3,6 +3,8 @@ const router = express.Router();
 const mkdirp = require("mkdirp");
 const fs = require("fs-extra");
 const resizeImg = require("resize-img");
+const auth = require("../config/auth")
+const isAdmin = auth.isAdmin;
 
 // GET Product model
 const Product = require("../models/product")
@@ -14,7 +16,7 @@ const Category = require("../models/category")
 /*
 * GET Product index
 */
-router.get("/", function (req, res) {
+router.get("/", isAdmin, function (req, res) {
     let count;
 
     Product.count(function (err, c) {
@@ -32,7 +34,7 @@ router.get("/", function (req, res) {
 /*
 * GET add Product
 */
-router.get("/add-product", function (req, res) {
+router.get("/add-product", isAdmin, function (req, res) {
     let title = "";
     let description = "";
     let price = "";
@@ -50,7 +52,7 @@ router.get("/add-product", function (req, res) {
 /*
 * POST add Product
 */
-router.post("/add-product", function (req, res) {
+router.post("/add-product", isAdmin, function (req, res) {
     let imageFile = typeof req.files.image !== "undefined" ? req.files.image.name : "";
 
     req.checkBody("title", "Title must have a value.").notEmpty();
@@ -131,7 +133,7 @@ router.post("/add-product", function (req, res) {
 /*
 * GET edit Product
 */
-router.get("/edit-product/:id", function (req, res) {
+router.get("/edit-product/:id", isAdmin, function (req, res) {
     let errors;
 
     if (req.session.errors) {
@@ -175,7 +177,7 @@ router.get("/edit-product/:id", function (req, res) {
 /*
 * POST edit Product
 */
-router.post("/edit-product/:id", function (req, res) {
+router.post("/edit-product/:id", isAdmin, function (req, res) {
     let imageFile = typeof req.files.image !== "undefined" ? req.files.image.name : "";
 
     req.checkBody("title", "Title must have a value.").notEmpty();
@@ -255,7 +257,7 @@ router.post("/edit-product/:id", function (req, res) {
 /*
 * POST product gallery
 */
-router.post("/product-gallery/:id", function (req, res) {
+router.post("/product-gallery/:id", isAdmin, function (req, res) {
     let productImage = req.files.file;
     let id = req.params.id;
     let path = "public/product_images/" + id + "/gallery/" + req.files.file.name;
@@ -276,7 +278,7 @@ router.post("/product-gallery/:id", function (req, res) {
 /*
 * GET delete image
 */
-router.get("/delete-image/:image", function (req, res) {
+router.get("/delete-image/:image", isAdmin, function (req, res) {
     let originalImage = "public/product_images/" + req.query.id + "/gallery/" + req.params.image;
     let thumbsImage = "public/product_images/" + req.query.id + "/gallery/thumbs/" + req.params.image;
 
@@ -300,7 +302,7 @@ router.get("/delete-image/:image", function (req, res) {
 /*
 * GET delete Product
 */
-router.get("/delete-product/:id", function (req, res) {
+router.get("/delete-product/:id", isAdmin, function (req, res) {
 
     let id = req.params.id;
     let path = "public/product_images" + id;

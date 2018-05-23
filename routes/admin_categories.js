@@ -1,11 +1,13 @@
 const express = require("express")
 const router = express.Router();
+const auth = require("../config/auth")
+const isAdmin = auth.isAdmin;
 // GET page model
 const Category = require("../models/category")
 /*
 * GET category index
 */
-router.get("/", function (req, res) {
+router.get("/",isAdmin, function (req, res) {
     Category.find(function (err, categories) {
         if (err) {
             return console.log(err)
@@ -20,7 +22,7 @@ router.get("/", function (req, res) {
 /*
 * GET add category
 */
-router.get("/add-category", function (req, res) {
+router.get("/add-category", isAdmin, function (req, res) {
     let title = "";
 
     res.render("admin/add_category", {
@@ -31,7 +33,7 @@ router.get("/add-category", function (req, res) {
 /*
 * POST add category
 */
-router.post("/add-category", function (req, res) {
+router.post("/add-category",isAdmin, function (req, res) {
 
     req.checkBody("title", "Title must have a value.").notEmpty();
 
@@ -76,7 +78,7 @@ router.post("/add-category", function (req, res) {
 /*
 * GET edit category
 */
-router.get("/edit-category/:id", function (req, res) {
+router.get("/edit-category/:id",isAdmin, function (req, res) {
     Category.findById(req.params.id, function (err, category) {
         if (err) {
             return console.log(err)
@@ -92,7 +94,7 @@ router.get("/edit-category/:id", function (req, res) {
 /*
 * POST edit category
 */
-router.post("/edit-category/:id", function (req, res) {
+router.post("/edit-category/:id",isAdmin, function (req, res) {
 
     req.checkBody("title", "Title must have a value.").notEmpty();
 
@@ -148,7 +150,7 @@ router.post("/edit-category/:id", function (req, res) {
 /*
 * GET delete page
 */
-router.get("/delete-category/:id", function (req, res) {
+router.get("/delete-category/:id",isAdmin, function (req, res) {
     Category.findByIdAndRemove(req.params.id, function (err) {
         if (err) {
             return console.log(err)
