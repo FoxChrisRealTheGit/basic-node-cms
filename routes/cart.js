@@ -4,7 +4,7 @@ const router = express.Router();
 const Product = require("../models/product")
 
 /*
-* GET  add product to carty
+* GET  add product to cart
 */
 router.get("/add/:product", function (req, res) {
 
@@ -15,7 +15,7 @@ router.get("/add/:product", function (req, res) {
             console.log(err);
         }
         if (typeof req.session.cart == "undefined") {
-            req.session.cart = {};
+            req.session.cart = [];
             req.session.cart.push({
                 title: slug,
                 qty: 1,
@@ -55,13 +55,15 @@ router.get("/add/:product", function (req, res) {
 * GET  checkout product
 */
 router.get("/checkout", function (req, res) {
+    let email = require("../config/stuff")
     if (req.session.cart && req.session.cart.length == 0) {
         delete req.session.cart
         res.redirect("/cart/checkout");
     } else {
         res.render("checkout", {
             title: "checkout",
-            cart: req.session.cart
+            cart: req.session.cart,
+            email: email.paypalSandbox
         })
     }
 
@@ -71,11 +73,10 @@ router.get("/checkout", function (req, res) {
 /*
 * GET  update product
 */
-router.get("/update/product", function (req, res) {
+router.get("/update/:product", function (req, res) {
     let slug = req.params.product;
     let cart = req.session.cart;
     let action = req.query.action;
-
     for (let i = 0; i < cart.length; i++) {
         switch (action) {
             case "add":
@@ -84,16 +85,16 @@ router.get("/update/product", function (req, res) {
             case "remove":
                 cart[i].qty--;
                 if (cart[i].qty < 1) {
-                    cart.slice(i, 1);
+                    cart.splice(i, 1);
                     if (cart.length == 0) {
-                        delete req.session.cart
+                        delete cart
                     }
                 }
                 break;
             case "clear":
-                cart.slice(i, 1);
-                if (cart.length == 0) {
-                    delete req.session.cart
+                cart.splice(i, 1);
+                if (cart.length == 0 ) {
+                    delete cart
                 }
                 break;
             default:
@@ -115,6 +116,16 @@ router.get("/clear", function (req, res) {
 
     req.flash("success", "Cart cleared!");
     res.redirect("/cart/checkout");
+
+})
+
+/*
+* GET  buy now
+*/
+router.get("/buynow", function (req, res) {
+    delete req.session.cart;
+
+    res.sendStatus(200);
 
 })
 

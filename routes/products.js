@@ -49,7 +49,7 @@ router.get("/:category", function (req, res) {
 * GET  product details
 */
 
-router.get("/:categor/product", function (req, res) {
+router.get("/:category/:product", function (req, res) {
 
     let galleryImages = null;
 
@@ -59,7 +59,7 @@ router.get("/:categor/product", function (req, res) {
         } else {
             let galleryDir = "public/product_images/" + product._id + "/gallery";
 
-            fs.redirect(galleryDir, function (err, files) {
+            fs.readdir(galleryDir, function (err, files) {
                 if (err) {
                     console.log(err)
                 } else {

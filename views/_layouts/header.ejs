@@ -18,11 +18,16 @@
 
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
         crossorigin="anonymous"></script>
-        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-    crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous"></script>
 </head>
 
 <body>
+    <div class="ajaxbg">
+        <div class="ajaxinner">
+            <h3>You are now being redirected to paypal...</h3>
+        </div>
+    </div>
 
     <nav class="navbar navbar-expand-md navbar-dark bg-dark">
         <a class="navbar-brand" href="/">Basic CMS</a>
@@ -58,8 +63,8 @@
                             <%= cart.length %>
                                 <% } else { %>
                                     0
-                        <% } %>
-                    )</a>
+                                    <% } %>
+                                        )</a>
                 </li>
             </ul>
         </div>
